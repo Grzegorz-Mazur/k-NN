@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 
+# instal numpy, pandas, scikit-learn
 # 1. Pobranie bazy MNIST
 mnist = fetch_openml('mnist_784', version=1)
 X, y = mnist.data, mnist.target
