@@ -1,0 +1,14 @@
+przezebtacja na 5/10miut
+jakies 5-10 slajdów
+
+Co do projektów to wymagania podstawowe:
+
+    - implementacja modelu/algorytmu
+
+    - porównanie działania czasowe i jakościowe z wersją biblioteczną
+
+    - unittesty w projekcie
+
+    - kod napisany obiektowo, zgodnie z wytycznymi PEP, clean code (o clean code jeszcze sobie powiemy)
+
+    - wizualizacje wyników (np. w matplotlib, seaborn)
