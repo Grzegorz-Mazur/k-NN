@@ -2,6 +2,7 @@
 # 1. Import bibliotek
 # =============================================================================
 import numpy as np
+import time  # Do pomiaru czasu wykonania
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -61,12 +62,23 @@ X_test = scaler.transform(X_test)
 # =============================================================================
 k = 3
 knn_sklearn = KNeighborsClassifier(n_neighbors=k)
+
+start_time_train_sklearn = time.time()
 knn_sklearn.fit(X_train, y_train)
+end_time_train_sklearn = time.time()
+
+train_time_sklearn = end_time_train_sklearn - start_time_train_sklearn
+print(f"[scikit-learn] Czas trenowania (k={k}): {train_time_sklearn:.4f} s")
 
 # =============================================================================
-# 7. Predykcja na zbiorze testowym (scikit-learn)
+# 7. Predykcja na zbiorze testowym (scikit-learn) + analiza czasu
 # =============================================================================
+start_time_pred_sklearn = time.time()
 y_pred_sklearn = knn_sklearn.predict(X_test)
+end_time_pred_sklearn = time.time()
+
+pred_time_sklearn = end_time_pred_sklearn - start_time_pred_sklearn
+print(f"[scikit-learn] Czas predykcji (k={k}, {len(X_test)} próbek): {pred_time_sklearn:.4f} s")
 
 # =============================================================================
 # 8. Ocena modelu (scikit-learn)
@@ -81,8 +93,7 @@ plt.title('Macierz pomyłek (scikit-learn)')
 plt.show()
 
 # =============================================================================
-# 9. KONWERSJA y_test i y_train DO TABLIC NumPy
-#    (aby nie wystąpił problem z indeksami w Pandas Series)
+# 9. KONWERSJA y_test i y_train DO TABLIC NumPy (aby uniknąć błędów indeksowania)
 # =============================================================================
 y_test = np.array(y_test)
 y_train = np.array(y_train)
@@ -103,8 +114,8 @@ print(report_sklearn)
 # 10. Analiza odległości w k-NN scikit-learn (przykład dla pierwszej próbki)
 # =============================================================================
 distances, indices = knn_sklearn.kneighbors([X_test[0]])
-print("Odległości do najbliższych sąsiadów:", distances)
-print("Indeksy najbliższych sąsiadów:", indices)
+print("Odległości do najbliższych sąsiadów (pierwsza próbka):", distances)
+print("Indeksy najbliższych sąsiadów (pierwsza próbka):", indices)
 
 # Wyświetlenie pierwszej próbki testowej i jej sąsiadów
 display_images(X_train[indices[0]], y_train[indices[0]], num=3)
@@ -143,10 +154,6 @@ def my_knn_predict(X_train, y_train, X_test, k=3):
 
         predictions[i] = predicted_label
 
-        # Opcjonalnie można dodać info o postępie:
-        if i % 100 == 0 and i > 0:
-             print(f"Przetworzono {i} / {X_test.shape[0]} próbek testowych...")
-
     return predictions
 
 
@@ -159,10 +166,16 @@ X_test_subset = X_test[:subset_size]
 y_test_subset = y_test[:subset_size]
 
 print("\nRozpoczynam predykcję przy użyciu własnej implementacji k-NN (może to chwilę potrwać)...")
+
+start_time_custom = time.time()
 y_pred_custom = my_knn_predict(X_train, y_train, X_test_subset, k=3)
+end_time_custom = time.time()
+
+pred_time_custom = end_time_custom - start_time_custom
+print(f"[Custom k-NN] Czas predykcji (k=3, {subset_size} próbek): {pred_time_custom:.4f} s")
 
 accuracy_custom = accuracy_score(y_test_subset, y_pred_custom)
-print(f"[Custom k-NN] Dokładność na podzbiorze {subset_size} próbek: {accuracy_custom:.4f}")
+print(f"[Custom k-NN] Dokładność na {subset_size} próbkach: {accuracy_custom:.4f}")
 
 cm_custom = confusion_matrix(y_test_subset, y_pred_custom)
 disp_custom = ConfusionMatrixDisplay(confusion_matrix=cm_custom, display_labels=np.arange(10))
@@ -177,8 +190,12 @@ print('[Custom k-NN] Raport klasyfikacji (subset testowy):\n')
 print(report_custom)
 
 # =============================================================================
-# 13. Podsumowanie
+# 13. Podsumowanie czasowe i jakościowe
 # =============================================================================
 print("=== Podsumowanie porównania ===")
 print(f"[scikit-learn] Dokładność (k=3) na pełnym zbiorze testowym: {accuracy_sklearn:.4f}")
+print(f"[scikit-learn] Czas trenowania: {train_time_sklearn:.4f} s")
+print(f"[scikit-learn] Czas predykcji (pełny test): {pred_time_sklearn:.4f} s")
+
 print(f"[Custom k-NN]  Dokładność (k=3) na {subset_size}-elementowym podzbiorze: {accuracy_custom:.4f}")
+print(f"[Custom k-NN]  Czas predykcji (podzbiór {subset_size} próbek): {pred_time_custom:.4f} s")
