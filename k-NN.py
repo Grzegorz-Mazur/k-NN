@@ -15,10 +15,8 @@ import matplotlib.pyplot as plt
 # 2. Funkcja do wyświetlania obrazów
 # =============================================================================
 def display_images(images, labels, predictions=None, num=10):
-    """
-    Wyświetla 'num' obrazów 28x28 wraz z oryginalną etykietą
-    (oraz opcjonalnie predykcją).
-    """
+# Wyświetla 'num' obrazów 28x28 wraz z oryginalną etykietą  (oraz opcjonalnie predykcją).
+
     plt.figure(figsize=(10, 5))
     for i in range(num):
         plt.subplot(2, 5, i + 1)
@@ -126,7 +124,7 @@ display_images(X_train[indices[0]], y_train[indices[0]], num=3)
 # =============================================================================
 def my_knn_predict(X_train, y_train, X_test, k=3):
     """
-    Moja własna (naiwna) implementacja algorytmu k-NN.
+    Moja własna implementacja algorytmu k-NN.
 
     Argumenty:
         X_train (ndarray): Dane treningowe, kształt (n_train, n_features).

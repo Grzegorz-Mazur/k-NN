@@ -43,7 +43,7 @@ class TestKNN(unittest.TestCase):
         self.assertGreater(accuracy, 0.5, "Dokładność powinna być większa niż 50%")
 
     def test_knn_identical_samples(self):
-        """Test sprawdzający, czy model poprawnie klasyfikuje identyczne próbki"""
+        #Test sprawdzający, czy model poprawnie klasyfikuje identyczne próbki
         X_train = np.array([[1, 1], [2, 2], [3, 3]])
         y_train = np.array([0, 1, 1])
         X_test = np.array([[1, 1]])
@@ -51,7 +51,7 @@ class TestKNN(unittest.TestCase):
         self.assertEqual(y_pred[0], 0, "Model powinien poprawnie klasyfikować identyczne próbki")
 
     def test_knn_different_k_values(self):
-        """Test dla różnych wartości k"""
+        #Test dla różnych wartości k
         for k in [1, 3, 5]:
             y_pred = my_knn_predict(self.X_train, self.y_train, self.X_test, k=k)
             accuracy = accuracy_score(self.y_test, y_pred)
